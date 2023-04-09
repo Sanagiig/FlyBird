@@ -17,6 +17,7 @@ const {ccclass, property} = _decorator;
 @ccclass("BackgroundController")
 export class BackgroundController extends Component implements BasicController {
   private worldSize: Size;
+  private distance = 0;
   private toggle = false;
   public vec = v2(-1, 0);
   public speed = 100;
@@ -27,7 +28,7 @@ export class BackgroundController extends Component implements BasicController {
   }
 
   stop(): void {
-      this.isAlive = false;
+    this.isAlive = false;
   }
 
   enable(): void {
@@ -48,15 +49,17 @@ export class BackgroundController extends Component implements BasicController {
   }
 
   update(deltaTime: number) {
-    if(this.isAlive){
+    if (this.isAlive) {
       const {width} = this.worldSize;
       const pos = this.node.getPosition();
       const offsetx = this.vec.x * this.speed * deltaTime;
       const offsety = this.vec.y * this.speed * deltaTime;
-  
-      if (pos.x <= -width) {
+
+      if (this.distance > width) {
         pos.add3f(width, 0, 0);
+        this.distance -= width;
       }
+      this.distance -= offsetx;
       this.node.setPosition(pos.add(v3(offsetx, offsety)));
     }
   }
